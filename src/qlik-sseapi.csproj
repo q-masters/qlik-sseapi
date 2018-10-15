@@ -82,7 +82,7 @@
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="4.0.0-beta0014" />
+    <PackageReference Include="GitVersionTask" Version="4.0.1-beta0001-0004" />
     <PackageReference Include="Google.Protobuf" Version="3.6.1" />
     <PackageReference Include="Grpc" Version="1.15.0" />
     <PackageReference Include="Grpc.Core" Version="1.15.0" />
