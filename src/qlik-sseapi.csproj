@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net452;</TargetFrameworks>
 		<Copyright>Copyright © 2017</Copyright>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Authors>Konrad Mattheis, Martin Berthold</Authors>
@@ -13,26 +14,17 @@
 
 		<Version>$(GitVersion_NuGetVersion)</Version>
 		<RootNamespace>Qlik.Sse</RootNamespace>
+
+    <NoWarn>CS1570,CS1587,NU5105</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 	</PropertyGroup>
 
-	<Target Name="FixOnGitVersionTaskError" BeforeTargets="GetAssemblyVersion">
-		<CreateProperty Value="0.0.1-notgitversion" Condition="'$(GitVersion_NuGetVersion)' == ''">
-			<Output TaskParameter="Value" PropertyName="Version" />
-		</CreateProperty>
-	</Target>
 
-	<Choose>
-		<When Condition="'$(OS)' == 'Windows_NT'">
-			<PropertyGroup>
-				<TargetFrameworks>netcoreapp2.0;net452;</TargetFrameworks>
-			</PropertyGroup>
-		</When>
-		<Otherwise>
-			<PropertyGroup>
-				<TargetFramework>netcoreapp2.0</TargetFramework>
-			</PropertyGroup>
-		</Otherwise>
-	</Choose>
 	<Choose>
 		<When Condition="'$(Configuration)' == 'Release'">
 			<PropertyGroup>
@@ -46,23 +38,32 @@
 		</Otherwise>
 	</Choose>
 
-	<Target Name="PublishToNugetWithAPIKey" AfterTargets="GenerateNuspec" Condition="Exists('$(SolutionDir)\..\..\nugetapikey.txt')">
-		<ReadLinesFromFile File="$(SolutionDir)\..\..\nugetapikey.txt">
-			<Output TaskParameter="Lines" PropertyName="NugetAPIKey" />
-		</ReadLinesFromFile>
-		<Exec WorkingDirectory="$(BaseDir)" Command="dotnet nuget push $(PackageOutputAbsolutePath)$(PackageId).$(PackageVersion).nupkg -k $(NugetAPIKey) -s https://api.nuget.org/v3/index.json" />
-	</Target>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="GitVersionTask" Version="5.3.5" PrivateAssets="all" />
+    <PackageReference Include="Google.Protobuf" Version="3.12.2" />
+    <PackageReference Include="Grpc.Core" Version="2.29.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.29.0" PrivateAssets="all" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="GitVersionTask" Version="4.0.0" PrivateAssets="all" />
-		<PackageReference Include="Google.Protobuf" Version="3.6.1" />
-		<PackageReference Include="Grpc" Version="1.18.0" />
-		<PackageReference Include="Grpc.Core" Version="1.18.0" />
-		<PackageReference Include="Grpc.Tools" Version="1.18.0" PrivateAssets="all" />
-		<PackageReference Include="System.Interactive.Async" Version="3.2.0" />
-	</ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="**/*.proto" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<Protobuf Include="**/*.proto" />
-	</ItemGroup>
+  <ItemGroup>
+    <None Remove="packages.lock.json" />
+  </ItemGroup>
+
+  <Target Name="PublishToNugetWithAPIKey" AfterTargets="GenerateNuspec" Condition="Exists('$(SolutionDir)\..\..\nugetapikey.txt')">
+    <ReadLinesFromFile File="$(SolutionDir)\..\..\nugetapikey.txt">
+      <Output TaskParameter="Lines" PropertyName="NugetAPIKey" />
+    </ReadLinesFromFile>
+    <Exec WorkingDirectory="$(BaseDir)" Command="dotnet nuget push $(PackageOutputAbsolutePath)$(PackageId).$(PackageVersion).nupkg -k $(NugetAPIKey) -s https://api.nuget.org/v3/index.json" />
+  </Target>
+  
+  <Target Name="FixOnGitVersionTaskError" BeforeTargets="GetAssemblyVersion">
+    <CreateProperty Value="0.0.1-notgitversion" Condition="'$(GitVersion_NuGetVersion)' == ''">
+      <Output TaskParameter="Value" PropertyName="Version" />
+    </CreateProperty>
+  </Target>
 </Project>

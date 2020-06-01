@@ -11,9 +11,20 @@
     #endregion
 
     #region ProtobufHelper
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ProtobufHelper
     {
-        private static ConcurrentDictionary<Type, Tuple<string, MessageParser>> parserDic = new ConcurrentDictionary<Type, Tuple<string, MessageParser>>();
+        private static readonly ConcurrentDictionary<Type, Tuple<string, MessageParser>> parserDic = new ConcurrentDictionary<Type, Tuple<string, MessageParser>>();
+
+        /// <summary>
+        /// Extension Method to easy parsing of Qlik Header Messages. If one Message of
+        /// the requested type is found. This is returned.
+        /// </summary>
+        /// <typeparam name="T">The type of Result</typeparam>
+        /// <param name="md">This for Extending the Metadata Class</param>
+        /// <returns>Returns the parsed Message.</returns>
         public static T ParseIMessageFirstOrDefault<T>(this Metadata md) where T : class, Google.Protobuf.IMessage<T>, new()
         {
             var type = typeof(T);
@@ -36,9 +47,15 @@
                 }
             }
 
-            return default(T);
+            return default;
         }
 
+        /// <summary>
+        /// Extension Method to easy parsing of Qlik Header Messages
+        /// </summary>
+        /// <typeparam name="T">The type of Result</typeparam>
+        /// <param name="md">This for Extending the Metadata Class</param>
+        /// <returns>Returns the parsed Message.</returns>
         public static IEnumerable<T> ParseIMessages<T>(this Metadata md) where T : class, Google.Protobuf.IMessage<T>, new()
         {
             var type = typeof(T);
@@ -61,7 +78,7 @@
                 }
             }
 
-            yield return default(T);
+            yield return default;
         }
 
     }
