@@ -31,13 +31,13 @@ jobs:
     - name: Publish Nuget
       run: |
         dotnet nuget push ./src/bin/Release/qlik-sseapi.${{ steps.gitversion.outputs.semVer }}.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
-        
+
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: '${{ github.event.release.upload_url }}' 
+        upload_url: '${{ github.event.release.upload_url }}'
         asset_path: ./src/bin/Release/qlik-sseapi.${{ steps.gitversion.outputs.semVer }}.nupkg
         asset_name: qlik-connectapi.${{ steps.gitversion.outputs.semVer }}.nupkg
         asset_content_type: application/zip
