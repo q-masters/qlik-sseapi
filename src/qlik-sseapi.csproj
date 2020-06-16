@@ -41,7 +41,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="GitVersionTask" Version="5.3.6" PrivateAssets="all" />
-    <PackageReference Include="Google.Protobuf" Version="3.12.2" />
+    <PackageReference Include="Google.Protobuf" Version="3.12.3" />
     <PackageReference Include="Grpc.Core" Version="2.29.0" />
     <PackageReference Include="Grpc.Tools" Version="2.29.0" PrivateAssets="all" />
   </ItemGroup>
